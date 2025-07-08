@@ -1,5 +1,6 @@
 package Models;
 
+import Interfaces.Shippable;
 import Services.EmailService;
 import Services.PaymentService;
 import Services.ShippingService;
@@ -9,45 +10,53 @@ import java.util.List;
 import java.util.Map;
 
 public class BookStore {
-    private Inventory inventory;
+    private final Inventory inventory;
 
-    BookStore(Inventory inventory) {
+    public BookStore(Inventory inventory) {
         this.inventory = inventory;
     }
-
-    void addBook(Book book) {
+    public Book getByISBN(String ISBN){
+        StoreValidation.checkBookExist(ISBN, this);
+        return this.inventory.getByISBN(ISBN);
+    }
+   public void addBook(Book book) {
+        this.inventory.add(book);
     }
 
-    void getBooks() {
+    public void getBooks() {
+        this.inventory.getBooks();
     }
 
-    void removeBook(String ISBN) {
+    public  void removeBook(String ISBN) {
+        this.inventory.removeByISBN(ISBN);
     }
 
-    void removeOutdatedBooks(int year) {
+    public List<Book> removeOutdatedBooks(int year) {
+        return this.inventory.removeByYear(year);
     }
 
-    List<Book> getOutdatedBooks() {
-        return null;
+    public List<Book> getOutdatedBooks(int year) {
+        return this.inventory.getByYear(year);
     }
 
-    void buyBook(String ISBN, int quantity, String email, String address) {
+    public Inventory getInventory() {
+        return inventory;
+    }
+
+    public void buyBook(String ISBN, int quantity, String email, String address) {
         Map<String, Book> books = inventory.getBooksInventory();
-        Map<String, Integer> bookQuantity = inventory.getBookQuantity();
-        if (books.containsKey(ISBN)) {
-            Book book = books.get(ISBN);
-            StoreValidation.validateBookQuantity(bookQuantity.get(ISBN), quantity);
-            if (book instanceof EBook) {
-                PaymentService.buyBook(book, quantity);
-                EmailService.sendEmail(book, email);
-            } else if (book instanceof PaperBook) {
-                PaymentService.buyBook(book, quantity);
-                ShippingService.shippingBook(book, quantity, address);
-            } else if (book instanceof DemoBook) {
-                throw new RuntimeException("Demo books are not for sale.");
-            }
-        } else {
-            throw new RuntimeException("Book Not Found");
+        StoreValidation.checkBookExist(ISBN, this);
+        Book book = books.get(ISBN);
+        if (book instanceof EBook) {
+            PaymentService.buyBook(book, quantity);
+            EmailService.sendEmail(book, email);
+        } else if (book instanceof Shippable) {
+            StoreValidation.validateBookQuantity(((Shippable) book).getStocks(), quantity);
+            PaymentService.buyBook(book, quantity);
+            ShippingService.shippingBook(book, quantity, address);
+            ((Shippable) book).reduceStocks(quantity);
+        } else if (book instanceof DemoBook) {
+            throw new RuntimeException("Demo books are not for sale.");
         }
     }
 

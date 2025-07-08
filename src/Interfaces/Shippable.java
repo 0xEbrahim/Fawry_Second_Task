@@ -1,4 +1,6 @@
-package Factory;
+package Interfaces;
 
-public class Shippable {
+public interface Shippable {
+    void reduceStocks(int quantity);
+    int getStocks();
 }

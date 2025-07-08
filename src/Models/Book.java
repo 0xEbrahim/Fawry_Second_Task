@@ -1,20 +1,19 @@
 package Models;
 
 public abstract class Book {
-    private String title, ISBN;
+    private String title, ISBN, author;
     private int year, pages;
     private double price;
-    public int getPages() {
-        return pages;
-    }
 
-    public Book(String title, String ISBN, int year, double price, int pages) {
+    public Book(String title, String ISBN, String author, int year, double price) {
         this.title = title;
         this.ISBN = ISBN;
+        this.author = author;
         this.year = year;
         this.price = price;
-        this.pages = pages;
     }
+
+
 
     public String getTitle() {
         return title;

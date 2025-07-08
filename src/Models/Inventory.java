@@ -1,8 +1,10 @@
 package Models;
 
 import Interfaces.IInventory;
+import Interfaces.Shippable;
 
 import java.time.LocalDate;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,27 +12,23 @@ import java.util.Map;
 
 public class Inventory implements IInventory {
     Map<String, Book> books;
-    Map<String, Integer>bookQuantity;
-    Inventory(){
+    public Inventory(){
         books = new HashMap<>();
-        bookQuantity = new HashMap<>();
     }
 
     @Override
     public void add(Book book) {
         books.put(book.getISBN(), book);
-        bookQuantity.put(book.getTitle(), bookQuantity.get(book.getTitle()) + 1);
+        System.out.println(book.getTitle() + " added to the inventory");
     }
 
     @Override
-    public void removeByYear(int year) {
-        for (Map.Entry<String, Book> entry : books.entrySet()) {
-            Book book = entry.getValue();
-            if(LocalDate.now().getYear() - book.getYear() >= year){
-                books.remove(entry.getKey());
-                bookQuantity.remove(entry.getKey());
-            }
+    public List<Book> removeByYear(int year) {
+        ArrayList<Book> bookList = (ArrayList<Book>) this.getByYear(year);
+        for(Book book : bookList){
+            books.remove(book.getISBN());
         }
+        return bookList;
     }
 
     @Override
@@ -38,7 +36,7 @@ public class Inventory implements IInventory {
         ArrayList<Book> bookList = new ArrayList<>();
         for (Map.Entry<String, Book> entry : books.entrySet()) {
             Book book = entry.getValue();
-            if(LocalDate.now().getYear() - book.getYear() >= year){
+            if(Year.now().getValue()- book.getYear() >= year){
                 bookList.add(book);
             }
         }
@@ -70,15 +68,16 @@ public class Inventory implements IInventory {
         System.out.println("** Books **");
         for(Map.Entry<String, Book> entry : books.entrySet()){
             Book book = entry.getValue();
-            int quantity = bookQuantity.get(book.getISBN());
-            System.out.println(book.getISBN() + " " + book.getTitle() + " " + quantity);
+            if(book instanceof Shippable){
+                System.out.println(((Shippable) book).getStocks() + "X "+book.getISBN() + " " + book.getTitle() );
+            }else{
+                System.out.println(book.getISBN() + " " + book.getTitle());
+            }
         }
     }
 
     public Map<String, Book> getBooksInventory() {
         return books;
     }
-    public Map<String, Integer> getBookQuantity() {
-        return bookQuantity;
-    }
+
 }
