@@ -2,7 +2,10 @@ package Models;
 
 import Interfaces.IInventory;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Inventory implements IInventory {
@@ -20,13 +23,26 @@ public class Inventory implements IInventory {
     }
 
     @Override
-    public void removeByYears(int years) {
-
+    public void removeByYear(int year) {
+        for (Map.Entry<String, Book> entry : books.entrySet()) {
+            Book book = entry.getValue();
+            if(LocalDate.now().getYear() - book.getYear() >= year){
+                books.remove(entry.getKey());
+                bookQuantity.remove(entry.getKey());
+            }
+        }
     }
 
     @Override
-    public void getByYear(int year) {
-
+    public List<Book> getByYear(int year) {
+        ArrayList<Book> bookList = new ArrayList<>();
+        for (Map.Entry<String, Book> entry : books.entrySet()) {
+            Book book = entry.getValue();
+            if(LocalDate.now().getYear() - book.getYear() >= year){
+                bookList.add(book);
+            }
+        }
+        return bookList;
     }
 
     @Override
