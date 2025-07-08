@@ -39,6 +39,7 @@ public class StoreTest {
         bookStore.addBook(ebook1);
         bookStore.addBook(demo);
         List<Book> removed = bookStore.removeOutdatedBooks(10);
+
         System.out.println(" ** removed Books from Store **");
         for (Book book : removed) {
             System.out.println(book.getTitle());
