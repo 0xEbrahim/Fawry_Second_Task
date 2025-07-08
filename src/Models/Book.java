@@ -2,9 +2,13 @@ package Models;
 
 public abstract class Book {
     private String title, ISBN;
-    private int year, price, pages;
+    private int year, pages;
+    private double price;
+    public int getPages() {
+        return pages;
+    }
 
-    public Book(String title, String ISBN, int year, int price, int pages) {
+    public Book(String title, String ISBN, int year, double price, int pages) {
         this.title = title;
         this.ISBN = ISBN;
         this.year = year;
@@ -24,7 +28,7 @@ public abstract class Book {
         return year;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 }

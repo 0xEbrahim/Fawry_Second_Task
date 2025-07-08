@@ -1,5 +1,10 @@
 package Services;
 
-public class PaymentService {
+import Models.Book;
 
+public class PaymentService {
+    public void buyBook(Book book, int quantity){
+        double totalPrice = book.getPrice() * quantity;
+        System.out.println(totalPrice + "$ is paid successfully");
+    }
 }

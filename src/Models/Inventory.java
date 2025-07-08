@@ -74,4 +74,11 @@ public class Inventory implements IInventory {
             System.out.println(book.getISBN() + " " + book.getTitle() + " " + quantity);
         }
     }
+
+    public Map<String, Book> getBooksInventory() {
+        return books;
+    }
+    public Map<String, Integer> getBookQuantity() {
+        return bookQuantity;
+    }
 }
