@@ -38,7 +38,7 @@ This is an online book store, which sells multi-types of books and has support t
         test.notEnoughStocksTest();
         test.bookNotExistsTest();
     }
-}
+  }
   ```
 1 - Testing add functionality
   - Code:
