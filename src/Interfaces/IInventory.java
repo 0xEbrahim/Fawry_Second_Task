@@ -10,4 +10,5 @@ public interface IInventory {
     List<Book> getByYear(int year);
     void removeByISBN(String ISBN);
     Book getByISBN(String ISBN);
+    void getBooks();
 }

@@ -64,4 +64,14 @@ public class Inventory implements IInventory {
         }
         return book;
     }
+
+    @Override
+    public void getBooks() {
+        System.out.println("** Books **");
+        for(Map.Entry<String, Book> entry : books.entrySet()){
+            Book book = entry.getValue();
+            int quantity = bookQuantity.get(book.getISBN());
+            System.out.println(book.getISBN() + " " + book.getTitle() + " " + quantity);
+        }
+    }
 }
